@@ -1,14 +1,15 @@
 import { defineConfig } from 'vite';
-import { resolve } from 'path';
+import { fileURLToPath, URL } from 'node:url';
 
+// https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src'),
-      '@frontend': resolve(__dirname, 'src/frontend'),
-      '@backend': resolve(__dirname, 'src/backend'),
-      '@types': resolve(__dirname, 'src/types'),
-      '@tests': resolve(__dirname, 'tests'),
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@frontend': fileURLToPath(new URL('./src/frontend', import.meta.url)),
+      '@backend': fileURLToPath(new URL('./src/backend', import.meta.url)),
+      '@types': fileURLToPath(new URL('./src/types', import.meta.url)),
+      '@tests': fileURLToPath(new URL('./tests', import.meta.url)),
     },
   },
   server: {
@@ -26,7 +27,7 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html'),
+        main: fileURLToPath(new URL('./index.html', import.meta.url)),
       },
     },
   },

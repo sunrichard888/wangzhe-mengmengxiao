@@ -1,0 +1,19 @@
+# Vercel 部署忽略文件
+node_modules
+.team/
+TEAM_COMPOSITION.md
+tests/
+docker/
+.env.example
+.gitignore
+*.md
+!README.md
+
+# 后端代码（Vercel 只部署前端）
+src/backend/
+
+# 开发工具
+.git
+.idea
+.vscode
+*.log
