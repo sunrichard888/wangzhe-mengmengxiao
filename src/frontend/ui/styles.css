@@ -1,0 +1,389 @@
+/**
+ * 王者萌萌消 - Design Tokens
+ * 
+ * Color palette, spacing, typography, and UI components
+ * Following WCAG 2.1 AA accessibility guidelines
+ */
+
+/* ============================================
+   COLOR PALETTE
+   ============================================ */
+:root {
+  /* Primary Colors */
+  --color-primary: #4a69bd;
+  --color-primary-dark: #1e3799;
+  --color-primary-light: #74b9ff;
+  
+  /* Secondary Colors */
+  --color-secondary: #16213e;
+  --color-secondary-dark: #0f1526;
+  --color-secondary-light: #1f305a;
+  
+  /* Accent Colors */
+  --color-accent: #f0932b;
+  --color-accent-dark: #d35400;
+  --color-accent-light: #ffb142;
+  
+  /* Semantic Colors */
+  --color-success: #6ab04c;
+  --color-success-dark: #2d7d24;
+  --color-error: #eb4d4b;
+  --color-error-dark: #c0392b;
+  --color-warning: #f9ca24;
+  --color-info: #0fb9b8;
+  
+  /* Neutral Colors */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gray-50: #f5f6fa;
+  --color-gray-100: #dfe4ea;
+  --color-gray-200: #ced6e0;
+  --color-gray-300: #a4b0be;
+  --color-gray-400: #747d8c;
+  --color-gray-500: #57606f;
+  --color-gray-600: #2f3542;
+  
+  /* Card Type Colors */
+  --card-sword: #3B82F6;
+  --card-shield: #EF4444;
+  --card-potion: #10B981;
+  --card-crown: #F59E0B;
+  --card-gem: #8B5CF6;
+  --card-scroll: #6B7280;
+}
+
+/* ============================================
+   SPACING (4px Grid System)
+   ============================================ */
+:root {
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+:root {
+  /* Font Families */
+  --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
+                      'Helvetica Neue', Arial, sans-serif;
+  --font-family-mono: 'Courier New', Courier, monospace;
+  
+  /* Font Sizes */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 20px;
+  --font-size-xl: 24px;
+  --font-size-2xl: 32px;
+  --font-size-3xl: 48px;
+  
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Line Heights */
+  --line-height-tight: 1.25;
+  --line-height-base: 1.5;
+  --line-height-relaxed: 1.75;
+  
+  /* Letter Spacing */
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-base: 0;
+  --letter-spacing-wide: 0.025em;
+}
+
+/* ============================================
+   SIZING & LAYOUT
+   ============================================ */
+:root {
+  /* Card Dimensions */
+  --card-size: 64px;
+  --card-spacing: 8px;
+  --card-total: calc(var(--card-size) + var(--card-spacing));
+  --card-radius: 8px;
+  
+  /* Touch Targets (WCAG compliant) */
+  --touch-target-min: 44px;
+  --touch-target-recommended: 64px;
+  
+  /* Board Dimensions */
+  --board-padding: var(--spacing-md);
+  --board-radius: 16px;
+  --board-border-width: 2px;
+  
+  /* Viewport */
+  --viewport-min-width: 320px;
+  --viewport-max-width: 1920px;
+}
+
+/* ============================================
+   ANIMATIONS & TRANSITIONS
+   ============================================ */
+:root {
+  /* Durations */
+  --duration-instant: 0ms;
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  
+  /* Easing Functions */
+  --easing-linear: linear;
+  --easing-ease-in: ease-in;
+  --easing-ease-out: ease-out;
+  --easing-ease-in-out: ease-in-out;
+  --easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* ============================================
+   SHADOWS
+   ============================================ */
+:root {
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  --shadow-card: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --shadow-glow: 0 0 20px rgba(74, 105, 189, 0.5);
+}
+
+/* ============================================
+   UI COMPONENT STYLES
+   ============================================ */
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--touch-target-min);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--card-radius);
+  border: none;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--easing-ease-out);
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-secondary-light);
+}
+
+.btn-accent {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+}
+
+.btn-accent:hover {
+  background-color: var(--color-accent-dark);
+}
+
+/* Cards */
+.card {
+  width: var(--card-size);
+  height: var(--card-size);
+  border-radius: var(--card-radius);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--duration-fast) var(--easing-ease-out);
+}
+
+.card:hover {
+  transform: scale(1.1);
+}
+
+.card-selected {
+  box-shadow: 0 0 0 3px var(--color-accent), var(--shadow-glow);
+  transform: scale(1.1);
+}
+
+.card-matched {
+  animation: match-fade-out var(--duration-normal) var(--easing-ease-out);
+}
+
+@keyframes match-fade-out {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+/* Board */
+.game-board {
+  background-color: var(--color-secondary);
+  border: var(--board-border-width) solid var(--color-primary);
+  border-radius: var(--board-radius);
+  padding: var(--board-padding);
+  box-shadow: var(--shadow-xl);
+}
+
+/* UI Panels */
+.panel {
+  background-color: var(--color-white);
+  border-radius: var(--board-radius);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.panel-header {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-secondary);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Score Display */
+.score-display {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  text-shadow: var(--shadow-sm);
+}
+
+/* Moves Counter */
+.moves-counter {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-secondary);
+}
+
+.moves-counter.low {
+  color: var(--color-error);
+  animation: pulse var(--duration-slow) var(--easing-ease-in-out) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Result Screen */
+.result-screen {
+  text-align: center;
+  padding: var(--spacing-2xl);
+}
+
+.result-title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-lg);
+}
+
+.result-title.win {
+  color: var(--color-success);
+}
+
+.result-title.lose {
+  color: var(--color-error);
+}
+
+.result-score {
+  font-size: var(--font-size-2xl);
+  color: var(--color-secondary);
+  margin-bottom: var(--spacing-xl);
+}
+
+/* Stars Rating */
+.stars {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xl);
+}
+
+.star {
+  font-size: var(--font-size-2xl);
+  color: var(--color-gray-200);
+}
+
+.star.earned {
+  color: var(--color-accent);
+  text-shadow: var(--shadow-glow);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+  :root {
+    --card-size: 48px;
+    --card-spacing: 6px;
+    --font-size-3xl: 36px;
+    --font-size-2xl: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --card-size: 40px;
+    --card-spacing: 4px;
+    --spacing-lg: 16px;
+    --spacing-xl: 24px;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus States */
+*:focus {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  :root {
+    --color-primary: #0000ff;
+    --color-secondary: #000000;
+    --color-accent: #ff8800;
+  }
+}
