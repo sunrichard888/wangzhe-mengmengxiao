@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>王者萌萌消 - 测试版</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: auto;
+      padding: 20px;
+    }
+    #game-container {
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #1a1a2e;
+    }
+    .ui-overlay {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.8);
+      padding: 15px 30px;
+      border-radius: 10px;
+      color: white;
+      font-size: 18px;
+      z-index: 100;
+      display: flex;
+      gap: 30px;
+    }
+    .ui-overlay span { font-weight: bold; color: #f39c12; }
+    .loading {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #ffffff;
+      font-size: 24px;
+      text-align: center;
+      z-index: 1000;
+    }
+    .loading::after {
+      content: '...';
+      animation: dots 1.5s infinite;
+    }
+    @keyframes dots {
+      0%, 20% { content: '.'; }
+      40% { content: '..'; }
+      60%, 100% { content: '...'; }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading" id="loading">Loading Game</div>
+  
+  <div class="ui-overlay" id="ui" style="display:none;">
+    <div>得分：<span id="score">0</span></div>
+    <div>步数：<span id="moves">20</span></div>
+    <div>关卡：<span id="level">1</span></div>
+  </div>
+
+  <div id="game-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
+  <script>
+    // 游戏配置
+    const config = {
+      type: Phaser.AUTO,
+      width: 800,
+      height: 600,
+      parent: 'game-container',
+      backgroundColor: '#1a1a2e',
+      scene: {
+        preload: preload,
+        create: create,
+        update: update
+      },
+      scale: {
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH
+      }
+    };
+
+    let game;
+    let cards = [];
+    let selectedCard = null;
+    let score = 0;
+    let moves = 20;
+    let targetScore = 1000;
+    let isProcessing = false;
+    const cardTypes = ['sword', 'shield', 'potion', 'crown', 'gem', 'scroll'];
+    const colors = [0xff4444, 0x4444ff, 0x44ff44, 0xffff44, 0xff44ff, 0x44ffff];
+    const icons = ['⚔️', '🛡️', '🧪', '👑', '💎', '📜'];
+
+    function preload() {
+      // 生成卡牌纹理
+      cardTypes.forEach((type, index) => {
+        const graphics = this.make.graphics({ x: 0, y: 0, add: false });
+        graphics.fillStyle(colors[index], 1);
+        graphics.fillRoundedRect(0, 0, 64, 64, 8);
+        graphics.fillStyle(0xffffff, 1);
+        graphics.setFontSize(32);
+        graphics.fillText(icons[index], 16, 42);
+        graphics.generateTexture('card_' + type, 64, 64);
+      });
+    }
+
+    function create() {
+      // 隐藏 loading
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('ui').style.display = 'flex';
+      
+      // 创建标题
+      this.add.text(400, 30, '王者萌萌消', {
+        font: 'bold 32px Arial',
+        fill: '#f39c12'
+      }).setOrigin(0.5);
+
+      // 创建 8x8 卡牌网格
+      const startX = 100;
+      const startY = 80;
+      const spacing = 72;
+
+      for (let row = 0; row < 8; row++) {
+        cards[row] = [];
+        for (let col = 0; col < 8; col++) {
+          const typeIndex = Math.floor(Math.random() * cardTypes.length);
+          const type = cardTypes[typeIndex];
+          
+          const x = startX + col * spacing;
+          const y = startY + row * spacing;
+          
+          const card = this.add.image(x, y, 'card_' + type)
+            .setInteractive({ useHandCursor: true })
+            .setData('row', row)
+            .setData('col', col)
+            .setData('type', type)
+            .setData('typeIndex', typeIndex);
+
+          card.on('pointerdown', () => onCardClick(card));
+          cards[row][col] = card;
+        }
+      }
+
+      // 添加说明
+      this.add.text(400, 580, '点击两个相同的卡牌进行消除！', {
+        font: '18px Arial',
+        fill: '#ffffff'
+      }).setOrigin(0.5);
+    }
+
+    function update() {
+      // 空函数，不需要每帧更新
+    }
+
+    function onCardClick(card) {
+      if (isProcessing || card === selectedCard) return;
+
+      // 高亮选中的卡牌
+      if (selectedCard) {
+        selectedCard.setScale(1);
+        
+        // 检查是否匹配
+        if (card.getData('type') === selectedCard.getData('type')) {
+          // 匹配成功！
+          isProcessing = true;
+          score += 100;
+          moves--;
+          updateUI();
+          
+          // 消除动画
+          this.tweens.add({
+            targets: [card, selectedCard],
+            alpha: 0,
+            scale: 1.2,
+            duration: 300,
+            onComplete: () => {
+              // 生成新卡牌
+              regenerateCard(card);
+              regenerateCard(selectedCard);
+              card.setAlpha(1).setScale(1);
+              selectedCard.setAlpha(1).setScale(1);
+              isProcessing = false;
+              selectedCard = null;
+              
+              // 检查胜利条件
+              if (score >= targetScore) {
+                alert('恭喜过关！得分：' + score);
+                resetGame();
+              } else if (moves <= 0) {
+                alert('游戏结束！得分：' + score);
+                resetGame();
+              }
+            }
+          });
+        } else {
+          // 不匹配，重置
+          selectedCard = null;
+        }
+      } else {
+        // 选中第一张牌
+        selectedCard = card;
+        this.tweens.add({
+          targets: card,
+          scale: 1.1,
+          duration: 200,
+          yoyo: true,
+          repeat: 1
+        });
+      }
+    }
+
+    function regenerateCard(card) {
+      const typeIndex = Math.floor(Math.random() * cardTypes.length);
+      const type = cardTypes[typeIndex];
+      card.setTexture('card_' + type);
+      card.setData('type', type);
+      card.setData('typeIndex', typeIndex);
+    }
+
+    function updateUI() {
+      document.getElementById('score').textContent = score;
+      document.getElementById('moves').textContent = moves;
+      document.getElementById('level').textContent = Math.floor(score / 1000) + 1;
+    }
+
+    function resetGame() {
+      score = 0;
+      moves = 20;
+      targetScore = 1000;
+      updateUI();
+      
+      // 重新生成所有卡牌
+      for (let row = 0; row < 8; row++) {
+        for (let col = 0; col < 8; col++) {
+          regenerateCard(cards[row][col]);
+        }
+      }
+    }
+
+    // 初始化游戏
+    window.onload = () => {
+      game = new Phaser.Game(config);
+      setTimeout(() => {
+        document.getElementById('loading').style.display = 'none';
+      }, 1000);
+    };
+  </script>
+</body>
+</html>
