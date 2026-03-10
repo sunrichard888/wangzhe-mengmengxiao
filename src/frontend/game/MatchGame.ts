@@ -25,18 +25,14 @@ export class MatchGame extends Phaser.Scene {
     this.moves = 20;
   }
 
-  create() {
-    // Initialize match logic
-    this.matchLogic = new MatchLogic(8, 8);
-
-    // Create game board
-    this.createBoard();
-
-    // Create UI
-    this.createUI();
-
-    // Load card sprites (placeholder colors for now)
+  preload() {
     this.loadCardSprites();
+  }
+
+  create() {
+    this.matchLogic = new MatchLogic(8, 8);
+    this.createBoard();
+    this.createUI();
   }
 
   private loadCardSprites(): void {
