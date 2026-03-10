@@ -9,14 +9,18 @@ const config: Phaser.Types.Core.GameConfig = {
   scene: {
     preload() {
       // 生成卡牌纹理
+      const colors = [0xff4444, 0x4444ff, 0x44ff44, 0xffff44, 0xff44ff, 0x44ffff];
+      const icons = ['⚔️', '🛡️', '🧪', '👑', '💎', '📜'];
+      
       for (let i = 0; i < 6; i++) {
         const graphics = this.make.graphics({ x: 0, y: 0, add: false });
-        graphics.fillStyle([0xff4444, 0x4444ff, 0x44ff44, 0xffff44, 0xff44ff, 0x44ffff][i], 1);
+        graphics.fillStyle(colors[i], 1);
         graphics.fillRoundedRect(0, 0, 64, 64, 8);
         graphics.fillStyle(0xffffff, 1);
-        graphics.setFontSize(32);
-        graphics.fillText(['⚔️', '🛡️', '🧪', '👑', '💎', '📜'][i], 16, 42);
+        graphics.setFont('32px Arial');
+        graphics.fillText(icons[i], 16, 44);
         graphics.generateTexture('card_' + i, 64, 64);
+        graphics.destroy();
       }
     },
     create() {
