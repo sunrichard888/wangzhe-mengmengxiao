@@ -26,6 +26,7 @@
         box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
         border-radius: 10px;
         overflow: hidden;
+        position: relative;
       }
 
       #game-container canvas {
@@ -40,6 +41,7 @@
         color: #ffffff;
         font-size: 24px;
         text-align: center;
+        z-index: 100;
       }
 
       .loading::after {
@@ -47,29 +49,86 @@
         animation: dots 1.5s infinite;
       }
 
+      .loading-progress {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -20%);
+        color: #f39c12;
+        font-size: 14px;
+        text-align: center;
+        z-index: 100;
+      }
+
       @keyframes dots {
         0%, 20% { content: '.'; }
         40% { content: '..'; }
         60%, 100% { content: '...'; }
+      }
+
+      .error {
+        color: #e74c3c;
+        font-size: 16px;
+        max-width: 600px;
+        text-align: center;
+        line-height: 1.6;
       }
     </style>
   </head>
   <body>
     <div id="game-container">
       <div class="loading" id="loading">Loading Game</div>
+      <div class="loading-progress" id="progress">0%</div>
+      <div class="error" id="error" style="display: none;"></div>
     </div>
 
     <script type="module" src="/src/frontend/main.ts"></script>
     <script>
+      // Show loading progress
+      let progress = 0;
+      const progressEl = document.getElementById('progress');
+      const errorEl = document.getElementById('error');
+      const loadingEl = document.getElementById('loading');
+
+      // Update progress periodically to show activity
+      const progressInterval = setInterval(() => {
+        if (progress < 90) {
+          progress += Math.random() * 5;
+          if (progressEl) {
+            progressEl.textContent = Math.min(Math.round(progress), 90) + '%';
+          }
+        }
+      }, 500);
+
       // Hide loading screen when game is ready
       window.addEventListener('load', () => {
         setTimeout(() => {
+          clearInterval(progressInterval);
           const loading = document.getElementById('loading');
-          if (loading) {
-            loading.style.display = 'none';
-          }
-        }, 1000);
+          const progressDiv = document.getElementById('progress');
+          if (loading) loading.style.display = 'none';
+          if (progressDiv) progressDiv.style.display = 'none';
+        }, 2000);
       });
+
+      // Handle errors
+      window.addEventListener('error', (e) => {
+        clearInterval(progressInterval);
+        console.error('Game load error:', e);
+        if (loadingEl) loadingEl.style.display = 'none';
+        if (progressEl) progressEl.style.display = 'none';
+        if (errorEl) {
+          errorEl.style.display = 'block';
+          errorEl.textContent = 'Failed to load game. Please refresh the page or check console for details.';
+        }
+      });
+
+      // Expose for debugging
+      window.gameLoaded = () => {
+        clearInterval(progressInterval);
+        if (loadingEl) loadingEl.style.display = 'none';
+        if (progressEl) progressEl.style.display = 'none';
+      };
     </script>
   </body>
 </html>

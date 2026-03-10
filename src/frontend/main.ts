@@ -44,3 +44,8 @@ export { game };
 console.log('🎮 王者萌萌消 - Game Initialized');
 console.log(`📐 Game Size: ${config.width}x${config.height}`);
 console.log(`🎭 Scenes: ${config.scene?.length || 0} loaded`);
+
+// Notify that game is loaded (for GitHub Pages loading screen)
+if (typeof window !== 'undefined') {
+  (window as any).gameLoaded?.();
+}
