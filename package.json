@@ -45,6 +45,6 @@
     "@playwright/test": "^1.42.1"
   },
   "engines": {
-    "node": "18.x"
+    "node": ">=18"
   }
 }
