@@ -4,7 +4,7 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "devCommand": "npm run dev",
-  "installCommand": "npm install --prefer-offline --no-audit --no-fund",
+  "installCommand": "npm cache clean --force && npm install",
   "rewrites": [
     {
       "source": "/api/(.*)",
